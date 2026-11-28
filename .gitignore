@@ -1,0 +1,28 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+venv/
+backend/data/
+firmware/
+
+# File rahasia
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Konfigurasi lokal
+
+# File sementara Python
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# Data lokal
+backend/data/
+
+# Firmware sementara
+firmware/

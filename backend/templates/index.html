@@ -1,0 +1,694 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RubberGuard IoT</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --green: #16803c;
+    --dark-green: #075c2a;
+    --light-green: #eaf7e9;
+    --background: #f1f6f8;
+    --text: #172033;
+    --muted: #7b8794;
+    --border: #e6edf0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Inter, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+.dashboard {
+    max-width: 1500px;
+    margin: auto;
+    padding: 18px;
+}
+
+/* HEADER */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 24px;
+    background: white;
+    border-radius: 18px 18px 0 0;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    font-size: 35px;
+}
+
+.brand h1 {
+    color: var(--green);
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.brand p {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-menu a {
+    text-decoration: none;
+    color: #647084;
+    padding: 11px 17px;
+    border-radius: 25px;
+    font-size: 13px;
+}
+
+.nav-menu a.active {
+    background: var(--light-green);
+    color: var(--green);
+    font-weight: 700;
+}
+
+.connection {
+    background: var(--light-green);
+    color: var(--green);
+    padding: 10px 14px;
+    border-radius: 25px;
+    font-size: 12px;
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #45c65a;
+    margin-right: 7px;
+}
+
+/* HERO */
+
+.hero {
+    position: relative;
+    min-height: 440px;
+    overflow: hidden;
+    color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(4, 45, 20, 0.85),
+            rgba(4, 45, 20, 0.35),
+            rgba(4, 45, 20, 0.10)
+        ),
+        url("https://images.pexels.com/photos/10042307/pexels-photo-10042307.jpeg?auto=compress&cs=tinysrgb&w=1600");
+
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-content {
+    padding: 28px;
+}
+
+.sensor-cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(130px, 170px));
+    gap: 12px;
+}
+
+.sensor-card {
+    padding: 17px;
+    min-height: 145px;
+    border-radius: 16px;
+
+    background: rgba(255,255,255,0.17);
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(12px);
+}
+
+.sensor-icon {
+    font-size: 25px;
+    margin-bottom: 12px;
+}
+
+.sensor-label {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.sensor-value {
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.sensor-note {
+    font-size: 11px;
+    opacity: 0.85;
+}
+
+.gas-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    background: #36b65a;
+}
+
+.hero-title {
+    margin-top: 35px;
+}
+
+.hero-title h2 {
+    font-size: 35px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.hero-title p {
+    font-size: 15px;
+}
+
+.hero-bottom {
+    position: absolute;
+    bottom: 18px;
+    left: 24px;
+    right: 24px;
+
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 17px 22px;
+    border-radius: 15px;
+
+    background: rgba(0,35,15,0.68);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.25);
+}
+
+.hero-bottom strong {
+    font-size: 13px;
+}
+
+.hero-bottom p {
+    font-size: 11px;
+    margin-top: 5px;
+    opacity: 0.85;
+}
+
+/* CONTENT */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    margin-top: 18px;
+}
+
+.card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(20,50,70,0.04);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.card-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.card-header p {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+.badge {
+    background: var(--light-green);
+    color: var(--green);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.chart-container {
+    height: 300px;
+    position: relative;
+}
+
+/* STATUS */
+
+.status-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 14px;
+    background: #f7faf8;
+    border-radius: 12px;
+}
+
+.status-name {
+    color: #667085;
+    font-size: 12px;
+}
+
+.status-value {
+    color: var(--dark-green);
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.status-icon {
+    font-size: 23px;
+}
+
+.gas-meter {
+    height: 10px;
+    background: #e8edf0;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.gas-meter-fill {
+    width: 0%;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #38b65a, #f0c33c, #ed5b4c);
+    transition: width 0.4s;
+}
+
+/* TABLE */
+
+.history-card {
+    margin-top: 16px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 620px;
+}
+
+th {
+    background: #f5f9f6;
+    color: #667085;
+    font-size: 12px;
+    text-align: left;
+    padding: 14px;
+}
+
+td {
+    padding: 14px;
+    border-bottom: 1px solid #edf1f3;
+    font-size: 12px;
+}
+
+tbody tr:hover {
+    background: #f8fcf8;
+}
+
+/* DOWNLOAD */
+
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 17px;
+    background: var(--green);
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.download-btn:hover {
+    background: var(--dark-green);
+}
+
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    color: #98a2b3;
+    font-size: 11px;
+    padding: 22px 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+    .dashboard {
+        padding: 10px;
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+        padding: 15px;
+    }
+
+    .nav-menu {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sensor-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero {
+        min-height: 570px;
+    }
+
+    .hero-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .brand h1 {
+        font-size: 17px;
+    }
+
+    .brand p {
+        font-size: 9px;
+    }
+
+    .brand-icon {
+        font-size: 28px;
+    }
+
+    .connection {
+        font-size: 10px;
+        padding: 8px 10px;
+    }
+
+    .hero-content {
+        padding: 14px;
+    }
+
+    .sensor-card {
+        padding: 13px;
+        min-height: 130px;
+    }
+
+    .sensor-value {
+        font-size: 21px;
+    }
+
+    .hero-title h2 {
+        font-size: 24px;
+    }
+
+    .hero-title p {
+        font-size: 12px;
+    }
+
+    .hero-bottom {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        padding: 14px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .chart-container {
+        height: 260px;
+    }
+
+    .download-btn {
+        padding: 10px;
+        font-size: 10px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <header class="navbar">
+
+        <div class="brand">
+            <div class="brand-icon">🌿</div>
+            <div>
+                <h1>RubberGuard IoT</h1>
+                <p>Smart Monitoring for Healthy Rubber Plantation</p>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="/" class="active">Dashboard</a>
+            <a href="#grafik">Analytics</a>
+            <a href="#sensor">Sensor</a>
+        </nav>
+
+        <div class="connection">
+            <span class="dot"></span>
+            <span id="connectionStatus">Menghubungkan...</span>
+        </div>
+
+    </header>
+
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="sensor-cards">
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">🌡️</div>
+                    <div class="sensor-label">Suhu Udara</div>
+                    <div class="sensor-value" id="suhu">-- °C</div>
+                    <div class="sensor-note">Sensor DHT22</div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">💧</div>
+                    <div class="sensor-label">Kelembapan Udara</div>
+                    <div class="sensor-value" id="kelembapanUdara">-- %</div>
+                    <div class="sensor-note">Sensor DHT22</div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">🌱</div>
+                    <div class="sensor-label">Kelembapan Tanah</div>
+                    <div class="sensor-value" id="kelembapanTanah">-- %</div>
+                    <div class="sensor-note">Soil Moisture</div>
+                </div>
+
+                <div class="sensor-card">
+                    <div class="sensor-icon">〰️</div>
+                    <div class="sensor-label">Indeks Gas MQ-135</div>
+                    <div class="sensor-value" id="mq135">-- / 100</div>
+                    <div class="gas-badge" id="statusGas">Normal</div>
+                </div>
+
+            </div>
+
+            <div class="hero-title">
+                <h2>🌳 RubberGuard IoT</h2>
+                <p>Sistem Deteksi Dini Jamur Pohon Karet</p>
+            </div>
+
+        </div>
+
+        <div class="hero-bottom">
+            <div>
+                <strong>🌳 Monitoring Pohon Karet</strong>
+                <p>Prototype IoT · Satu Node Sensor</p>
+            </div>
+
+            <div>
+                <strong>📡 Mode Simulasi</strong>
+                <p>Data demo untuk pengujian tampilan</p>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="content-grid" id="grafik">
+
+        <div class="card">
+
+            <div class="card-header">
+                <div>
+                    <h3>🌿 Tren Sensor</h3>
+                    <p>Riwayat pembacaan sensor</p>
+                </div>
+
+                <span class="badge">Demo</span>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="sensorChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="card" id="sensor">
+
+            <div class="card-header">
+                <div>
+                    <h3>📊 Kondisi Sensor</h3>
+                    <p>Status pembacaan perangkat</p>
+                </div>
+            </div>
+
+            <div class="status-panel">
+
+                <div class="status-item">
+                    <div>
+                        <div class="status-name">Suhu Udara</div>
+                        <div class="status-value" id="suhuStatus">--</div>
+                    </div>
+                    <div class="status-icon">🌡️</div>
+                </div>
+
+                <div class="status-item">
+                    <div>
+                        <div class="status-name">Kelembapan Udara</div>
+                        <div class="status-value" id="udaraStatus">--</div>
+                    </div>
+                    <div class="status-icon">💧</div>
+                </div>
+
+                <div class="status-item">
+                    <div>
+                        <div class="status-name">Kelembapan Tanah</div>
+                        <div class="status-value" id="tanahStatus">--</div>
+                    </div>
+                    <div class="status-icon">🌱</div>
+                </div>
+
+                <div class="status-item">
+                    <div style="flex:1">
+                        <div class="status-name">Indeks Gas MQ-135</div>
+                        <div class="status-value" id="gasStatusDetail">-- / 100</div>
+
+                        <div class="gas-meter">
+                            <div class="gas-meter-fill" id="gasMeterFill"></div>
+                        </div>
+                    </div>
+                    <div class="status-icon">〰️</div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="card history-card">
+
+        <div class="card-header">
+            <div>
+                <h3>📋 Riwayat Data Sensor</h3>
+                <p>Data yang tersimpan pada file CSV</p>
+            </div>
+
+            <a href="/download/csv" class="download-btn">
+                ⬇ Download CSV
+            </a>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Waktu</th>
+                        <th>Suhu (°C)</th>
+                        <th>Kelembapan Udara (%)</th>
+                        <th>Kelembapan Tanah (%)</th>
+                        <th>Indeks Gas (0–100)</th>
+                    </tr>
+                </thead>
+
+                <tbody id="historyTable">
+                    <tr>
+                        <td colspan="5">Menunggu data...</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <footer class="footer">
+        RubberGuard IoT · Monitoring Lingkungan Pohon Karet
+    </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
